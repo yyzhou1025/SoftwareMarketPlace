@@ -1,0 +1,37 @@
+@(loginForm: Form[Login])
+
+@import helper._
+
+@import b3.vertical.fieldConstructor
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Login</title>
+
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")"/>
+    </head>
+    <body>
+        
+        <h1>Login</h1>
+
+        @if(flash().containsKey("authenticationError")) {
+            <h3>@flash().get("authenticationError")</h3>
+        }
+
+        @b3.form(routes.LoginController.authenticate()) {
+            <fieldset>
+                @b3.text(loginForm("username"), '_label -> "Username", '_help -> "")
+                @b3.text(loginForm("password"), '_label -> "Passworrd", '_help -> "")
+            </fieldset>
+
+            <div class="actions">
+                <input type="submit" value="Login" class="btn primary"> or
+                <a href="@routes.RegisterController.index()" class="btn">Register</a>
+            </div>
+        }
+    </body>
+</html>

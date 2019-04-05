@@ -1,0 +1,43 @@
+@(user: User, softwareForm: Form[Software])
+
+@import helper._
+
+@import b3.vertical.fieldConstructor
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Add Software</title>
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")"/>
+    </head>
+    <body>
+        <div class="center-block"><h1>Add a software</h1></div>
+
+        <div class="center-block">
+            @b3.form(routes.TestController.save()) {
+                <fieldset>
+                    @b3.text(softwareForm("softwareName"), '_label -> "Software name",'_help -> "")
+                    @b3.text(softwareForm("description"), '_label -> "Software description", '_help -> "")
+                    @b3.text(softwareForm("price"), '_label -> "Price", '_help -> "")
+                    <input type="hidden" name="user.userId" id="user.userId" value="@user.userId">
+                    @**
+                    @b3.select(
+                        softwareForm("user.userId"),
+                        options(User.users()),
+                        '_label -> "User", '_default -> "-- Choose a user --",
+                        '_showConstraints -> false
+                    )**@
+                </fieldset>
+
+                <div class="actions">
+                    <input type="submit" value="Add this software" class="btn primary"> or
+                    <a href="@routes.TestController.index()" class="btn">Cancel</a>
+                </div>
+            }
+        </div>
+
+    </body>
+</html>

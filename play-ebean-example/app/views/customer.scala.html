@@ -1,0 +1,22 @@
+@(softwares: List[Software])
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")"/>
+    </head>
+    <body>
+        <h1>My softwares</h1>
+
+        @for(software <- softwares) {
+            <h3>@software.softwareName</h3>
+        }
+        <a href="@routes.TestController.index()">Back</a>
+
+    </body>
+</html>

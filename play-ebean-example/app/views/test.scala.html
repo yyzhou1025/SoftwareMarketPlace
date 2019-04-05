@@ -1,0 +1,104 @@
+@(user: User, currentPage: com.avaje.ebean.PagedList[Software], currentSortBy: String, currentOrder: String, currentFilter: String)
+
+@link(newPage:Int, newSortBy:String) = @{
+
+    var sortBy = currentSortBy
+    var order = currentOrder
+
+    if (newSortBy != null) {
+        sortBy = newSortBy
+        if (currentSortBy == newSortBy) {
+            if (currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+
+    routes.TestController.list(newPage, sortBy, order, currentFilter)
+}
+
+@header(key:String, title:String) = {
+    <th class="header">
+        <a href="@link(0, key)">@title</a>
+    </th>
+}
+
+@main {
+
+    <h1 id="homeTitle">@currentPage.getTotalRowCount Items found</h1>
+
+    <div class="text-right">
+        <p>Current user: @user.userName</p>
+    </div>
+    <div>
+        <a href="@routes.LoginController.logout()">Logout</a>
+        <a href="@routes.UserController.getItems(user.userName)">My softwares</a>
+    </div>
+
+    <div id="actions">
+        <form action="@link(0, "name")" method="GET">
+            <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Search by name...">
+            <input type="submit" id="searchsubmit" value="Search" class="btn primary">
+        </form>
+
+        <a class="btn class" id="add" href="@routes.TestController.addSoftware()">Add a software</a>
+    </div>
+
+    @if(currentPage.getTotalRowCount == 0) {
+        <div>
+            <em>Nothing to display</em>
+        </div>
+    } else {
+        <table class="zebra-striped">
+            <thead>
+                <tr>
+                    @header("software_name", "Software Name")
+                    <!-- @header("description", "Description") -->
+                    <!--@header("price", "Price") -->
+                    @header("user.user_name", "Developer Name")
+                </tr>
+            </thead>
+            <tbody>
+                @for(software <- currentPage.getList()) {
+                    <tr>
+                        <!--  <td>@software.softwareName</td>-->
+                        <td><a href="@routes.TestController.softwareDetail(software.softwareName, software.description, software.price)">@software.softwareName</a></td>
+                        <!--  <td>@software.description</td>-->
+                        <!--  <td>@software.price</td>-->
+                        <td>@software.user.userName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div id="pagination" class="pagination">
+            <ul>
+                @if(currentPage.hasPrev) {
+                    <li class="prev">
+                        <a href="@link(currentPage.getPageIndex - 1, null)">&larr; Previous</a>
+                    </li>
+                } else {
+                    <li class="prev disabled">
+                        <a>&larr; Previous</a>
+                    </li>
+                }
+                <li class="current">
+                    <a>Displaying @currentPage.getDisplayXtoYofZ(" to ", " of ")</a>
+                </li>
+                @if(currentPage.hasNext) {
+                    <li class="next">
+                        <a href="@link(currentPage.getPageIndex + 1, null)">Next &rarr;</a>
+                    </li>
+                } else {
+                    <li class="next disabled">
+                        <a>Next &rarr;</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+}

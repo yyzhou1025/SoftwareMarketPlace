@@ -1,0 +1,46 @@
+@(userForm: Form[User])
+
+@import helper._
+
+@import b3.vertical.fieldConstructor
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Register</title>
+
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")"/>
+    </head>
+    <body>
+        <h1>Register</h1>
+
+        @if(flash().containsKey("registerError")) {
+            <h3>@flash().get("registerError")</h3>
+        }
+
+        @temp = @{ Seq("customer"->"customer", "developer"->"developer") }
+
+        @b3.form(routes.RegisterController.authenticate()) {
+            <fieldset>
+                @b3.text(userForm("userName"), '_label -> "Username", '_help -> "")
+                @b3.text(userForm("password"), '_label -> "Password", '_help -> "")
+
+                @b3.select(
+                    userForm("type"),
+                    options = temp,
+                    '_label -> "Type", '_default -> "-- Choose a user type --",
+                    '_showConstraints -> false
+                )
+            </fieldset>
+
+            <div class="actions">
+                <input type="submit" value="Register" class="btn primary"> or
+                <a href="@routes.LoginController.index()" class="btn">Cancel</a>
+            </div>
+        }
+
+    </body>
+</html>
